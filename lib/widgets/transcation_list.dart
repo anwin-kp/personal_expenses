@@ -21,7 +21,7 @@ class TranscationList extends StatelessWidget {
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     border: Border.all(
-                        color: Color.fromARGB(223, 185, 62, 178), width: 2),
+                        color: Theme.of(context).primaryColor, width: 2),
                   ),
                   margin: EdgeInsets.all(10),
                   child: Text(
@@ -30,7 +30,7 @@ class TranscationList extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(223, 185, 62, 178),
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                 ),

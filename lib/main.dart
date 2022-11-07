@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 import './widgets/transcation_list.dart';
@@ -10,7 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter App',
+      title: 'Personal Expenses',
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+        accentColor: Color.fromARGB(255, 255, 45, 45) ,
+      ),
       home: MyHomePage(),
     );
   }
@@ -71,8 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.add),
           ),
         ],
-        backgroundColor: Color.fromARGB(255, 248, 83, 83),
-        title: Text('eXPENSE mETER'),
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text('𝔼𝕩𝕡𝕖𝕟𝕤𝕖 𝕞𝕖𝕥𝕖𝕣'),
       ),
       body: SingleChildScrollView(
         child: Column(
