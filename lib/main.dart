@@ -112,9 +112,9 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
-              height: 20,
-            ),
+            // SizedBox(
+            //   height: 20,
+            // ),
             Chart(_recentTranscations),
             SizedBox(
               height: 20,
