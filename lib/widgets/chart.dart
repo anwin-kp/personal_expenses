@@ -17,6 +17,7 @@ class Chart extends StatelessWidget {
         );
 
         double totalSum = 0.0;
+
         for (var i = 0; i < recentTranscations.length; i++) {
           if (recentTranscations[i].date.day == weekDay.day &&
               recentTranscations[i].date.month == weekDay.month &&
@@ -31,7 +32,7 @@ class Chart extends StatelessWidget {
           'amount': totalSum
         };
       },
-    );
+    ).reversed.toList();
   }
 
   double get maxSpending {
@@ -45,33 +46,26 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(groupedTranscationValues);
+    //print(groupedTranscationValues);
     return Card(
       elevation: 6,
       margin: EdgeInsets.all(20),
       child: Padding(
         padding: EdgeInsets.all(10),
-        child: Container(
-          padding: EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Color.fromARGB(255, 0, 0, 0), width: 2),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: groupedTranscationValues.map((data) {
-              return Flexible(
-                fit: FlexFit.tight,
-                child: ChartBar(
-                  data['day'],
-                  data['amount'],
-                  (maxSpending == 0
-                      ? 0
-                      : (data["amount"] as double) / maxSpending),
-                ),
-              );
-            }).toList(),
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: groupedTranscationValues.map((data) {
+            return Flexible(
+              fit: FlexFit.tight,
+              child: ChartBar(
+                data['day'],
+                data['amount'],
+                (maxSpending == 0
+                    ? 0
+                    : (data["amount"] as double) / maxSpending),
+              ),
+            );
+          }).toList(),
         ),
       ),
     );

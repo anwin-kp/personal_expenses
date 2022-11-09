@@ -4,16 +4,19 @@ import 'package:intl/intl.dart';
 import '../models/transcation.dart';
 
 class TranscationList extends StatelessWidget {
+  final Function deleteTX;
   final List<Transcation> transcations;
-  TranscationList(this.transcations);
+  TranscationList(this.transcations, this.deleteTX);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 420,
-      child: transcations.isEmpty
-          ? Center(
+    return transcations.isEmpty
+        ? LayoutBuilder(builder: (ctx, constraints) {
+            return Center(
               child: Column(
                 children: [
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
                   Text(
                     'No Transcations added Yet !!',
                     style: TextStyle(
@@ -22,10 +25,10 @@ class TranscationList extends StatelessWidget {
                         color: Color.fromARGB(255, 225, 97, 51)),
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 20,
                   ),
                   Container(
-                    height: 200,
+                    height: constraints.maxHeight * 0.6,
                     child: Image.asset(
                       './assets/images/floral.png',
                       fit: BoxFit.cover,
@@ -33,82 +36,66 @@ class TranscationList extends StatelessWidget {
                   ),
                 ],
               ),
-            )
-          : ListView.builder(
-              // ignore: missing_return
-              itemBuilder: (ctx, index) {
-                return Card(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      //borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                          color: Color.fromARGB(255, 0, 0, 0), width: 2),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                                color: Theme.of(context).primaryColor,
-                                width: 2),
-                          ),
-                          margin: EdgeInsets.all(10),
-                          child: Text(
-                            '\$${transcations[index].amount.toStringAsFixed(2)}', //Amount Text
-                            //tx.amount.toString(),
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
+            );
+          })
+        : ListView.builder(
+            // ignore: missing_return
+            itemBuilder: (ctx, index) {
+              return Card(
+                elevation: 5,
+                margin: EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 5,
+                ),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.purple,
+                    radius: 30,
+                    child: Padding(
+                      padding: EdgeInsets.all(6),
+                      child: FittedBox(
+                        child: Text(
+                          '\$${(transcations[index].amount).toStringAsFixed(1)}',
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w500),
                         ),
-                        Container(
-                          margin: EdgeInsets.all(10),
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color.fromARGB(255, 255, 255, 255),
-                            border: Border.all(
-                                color: Color.fromARGB(223, 30, 21, 30),
-                                width: 2),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                //title
-                                transcations[index].title,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  wordSpacing: 2,
-                                  color: Color.fromARGB(255, 255, 113, 88),
-                                ),
-                              ),
-                              Text(
-                                //Date
-                                DateFormat.yMMMMEEEEd()
-                                    .format(transcations[index].date),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Color.fromARGB(255, 171, 134, 93),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
+                      ),
                     ),
                   ),
-                );
-              },
-              itemCount: transcations.length,
-            ),
-    );
+                  title: Text(
+                    transcations[index].title,
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+                  subtitle: Text(
+                    DateFormat.yMMMd().format(transcations[index].date),
+                  ),
+                  trailing: MediaQuery.of(context).size.width > 460
+                      ? OutlinedButton.icon(
+                          onPressed: () => deleteTX(transcations[index].id),
+                          icon: Icon(
+                            Icons.delete_outline,
+                            color: Colors.red,
+                          ),
+                          label: Text(
+                            'Detele',
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 255, 17, 0),
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide.none,
+                          ),
+                        )
+                      : IconButton(
+                          icon: Icon(Icons.delete_outline),
+                          color: Colors.black,
+                          iconSize: 30,
+                          onPressed: () => deleteTX(transcations[index].id),
+                        ),
+                ),
+              );
+            },
+            itemCount: transcations.length,
+          );
   }
 }
