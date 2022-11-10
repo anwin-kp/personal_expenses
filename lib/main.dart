@@ -1,8 +1,8 @@
-// ignore_for_file: deprecated_member_use
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 
+import 'dart:io';
 import './widgets/transcation_list.dart';
 import './widgets/new_transcation.dart';
 import './models/transcation.dart';
@@ -23,7 +23,6 @@ class MyApp extends StatelessWidget {
       title: 'Personal Expenses',
       theme: ThemeData(
         primaryColor: Color.fromARGB(255, 255, 45, 45),
-        accentColor: Color.fromARGB(255, 255, 45, 45),
         fontFamily: 'Quicksand',
         textTheme: ThemeData.light().textTheme.copyWith(
               subtitle1: TextStyle(
@@ -45,6 +44,8 @@ class MyApp extends StatelessWidget {
               fontSize: 20,
               fontWeight: FontWeight.w400),
         ),
+        colorScheme: ColorScheme.fromSwatch()
+            .copyWith(secondary: Color.fromARGB(255, 255, 45, 45)),
       ),
       home: MyHomePage(),
     );
@@ -121,30 +122,41 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
-    final appBar = AppBar(
-      actions: <Widget>[
-        IconButton(
-          onPressed: () => _startAddNewTransaction(context),
-          icon: Icon(Icons.add),
-        ),
-      ],
-      backgroundColor: Theme.of(context).primaryColor,
-      title: Text(
-        '𝔼𝕩𝕡𝕖𝕟𝕤𝕖 𝕞𝕖𝕥𝕖𝕣',
-        style: TextStyle(
-            color: Color.fromARGB(255, 255, 255, 255),
-            fontWeight: FontWeight.w600),
-        //style: Theme.of(context).textTheme.headline6,
-      ),
-    );
+    final PreferredSizeWidget appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: Text('Expense Meter'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                CupertinoButton(
+                  child: Icon(CupertinoIcons.add),
+                  onPressed: () => _startAddNewTransaction(context),
+                ),
+              ],
+            ),
+          )
+        : AppBar(
+            actions: <Widget>[
+              IconButton(
+                onPressed: () => _startAddNewTransaction(context),
+                icon: Icon(Icons.add),
+              ),
+            ],
+            backgroundColor: Theme.of(context).primaryColor,
+            title: Text(
+              '𝔼𝕩𝕡𝕖𝕟𝕤𝕖 𝕞𝕖𝕥𝕖𝕣',
+              style: TextStyle(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  fontWeight: FontWeight.w600),
+              //style: Theme.of(context).textTheme.headline6,
+            ),
+          );
     final txListWidget = Container(
       height: (mediaQuery.size.height - appBar.preferredSize.height) * 0.70,
       child: TranscationList(_userTranscations, _deleteTranscation),
     );
-    return Scaffold(
-      backgroundColor: Color.fromARGB(255, 123, 237, 255),
-      appBar: appBar,
-      body: SingleChildScrollView(
+    final pageBody = SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           //mainAxisAlignment: MainAxisAlignment.start,
@@ -186,11 +198,24 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => _startAddNewTransaction(context),
-      ),
     );
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: pageBody,
+            navigationBar: appBar,
+          )
+        : Scaffold(
+            backgroundColor: Color.fromARGB(255, 123, 237, 255),
+            appBar: appBar,
+            body: pageBody,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    child: Icon(Icons.add),
+                    onPressed: () => _startAddNewTransaction(context),
+                  ),
+          );
   }
 }
